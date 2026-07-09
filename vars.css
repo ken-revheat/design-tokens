@@ -1,0 +1,282 @@
+/* ==========================================================================
+   RevHeat Design Tokens — vars.css (@revheat/design-tokens `./vars.css`)
+   ==========================================================================
+   THE single shared token file — the package ships these values verbatim.
+   SYSTEM.md in the design repo (revheat-design-system/01-system/) is the
+   design contract; this file is its §11 runtime distribution, plus the
+   Appendix B canonized constants (notch geometry, ambient-loop durations).
+   Any hand-tuned value not in this file is a defect in the consumer.
+
+   Format decision (see tokens-decisions.md): every color is a FULL sRGB hex
+   literal — plain-CSS-consumable, Tailwind-4-native, mapped into Tailwind 3
+   via the companion preset. Values were designed in OKLCH (coordinates in
+   comments) and frozen to hex so brand anchors match the brand PDF
+   byte-for-byte. NO HSL triplets: hsl(247 94% 62%) — the portal's current
+   --primary — renders #5843f9, i.e. the triplet format itself produced the
+   off-spec purple the audit found. Hex literals make that drift impossible.
+
+   Naming: all tokens are prefixed --rh- so adoption can run alongside each
+   surface's existing un-prefixed shadcn vars without collision.
+
+   Dark mode is a v1 non-goal, but the raw-scale + semantic-alias split below
+   is the structure that lets a [data-theme] block remap semantics later.
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------
+     1. BRAND ANCHORS (from RH brand guidelines PDF — exact, never derived)
+     ------------------------------------------------------------------ */
+  --rh-paper: #fcfcfc;              /* brand background. Canonical: kills the portal's pure-white `--background: 0 0% 100%` drift */
+  --rh-white: #ffffff;              /* card/surface fill sitting ON paper */
+  --rh-purple: #6143f9;             /* THE purple — oklch(0.538 0.253 281.2). Portal #5843F9 and LA #8C3CDD die here (matrix divergence #1) */
+
+  /* ------------------------------------------------------------------
+     2. NEUTRAL SCALE — purple-tinted, NO flat grey (signature element)
+     Designed at oklch hue 285, chroma 0.005–0.010. Every step carries a
+     trace of the purple anchor; a zero-chroma grey anywhere is a defect.
+     ------------------------------------------------------------------ */
+  --rh-n-50:  #f7f7fb;              /* oklch(0.977 0.005 285) — subtle fill / table header row */
+  --rh-n-100: #eff0f4;              /* oklch(0.955 0.006 285) — hover fill, muted surface */
+  --rh-n-200: #e4e5ea;              /* oklch(0.922 0.008 285) — hairline borders, dividers */
+  --rh-n-300: #d3d3da;              /* oklch(0.869 0.009 285) — strong borders, disabled fill */
+  --rh-n-400: #919298;              /* oklch(0.661 0.010 285) — input borders (3.02:1 vs paper — AA UI floor), disabled text */
+  --rh-n-500: #7b7b82;              /* oklch(0.585 0.010 285) — secondary icons, decorative glyphs (not body text) */
+  --rh-n-600: #6c6c73;              /* oklch(0.535 0.010 285) — muted text; 4.58:1 on n-100, its darkest permitted bg */
+  --rh-n-700: #505057;              /* oklch(0.435 0.010 285) — secondary text */
+  --rh-n-800: #333339;              /* oklch(0.325 0.010 285) — headings-on-tint, high-emphasis secondary */
+  --rh-n-900: #19191e;              /* oklch(0.215 0.010 285) — ink. Primary text everywhere */
+
+  /* ------------------------------------------------------------------
+     3. SEMANTIC SURFACES / TEXT / BORDERS (aliases — components use THESE)
+     ------------------------------------------------------------------ */
+  --rh-bg:             var(--rh-paper);   /* app/page background */
+  --rh-surface:        var(--rh-white);   /* cards, panels, popovers */
+  --rh-surface-subtle: var(--rh-n-50);    /* wells, table headers, code/quote blocks */
+  --rh-ink:            var(--rh-n-900);   /* default text — 17.1:1 on paper */
+  --rh-text-secondary: var(--rh-n-700);   /* supporting copy — 7.8:1 on paper */
+  --rh-text-muted:     var(--rh-n-600);   /* captions, labels, timestamps — floor-checked 4.5:1+ on paper/white/n-50/n-100 */
+  --rh-text-disabled:  var(--rh-n-400);   /* disabled only (AA-exempt); NEVER for readable copy or placeholders */
+  --rh-text-placeholder: var(--rh-n-600); /* placeholders are text — they take the muted (4.5:1) value, not disabled */
+  --rh-border:         var(--rh-n-200);   /* decorative hairlines: cards, dividers (containment, not meaning) */
+  --rh-border-strong:  var(--rh-n-300);   /* emphasized container edges */
+  --rh-border-input:   var(--rh-n-400);   /* form controls MUST use this — 3:1 UI floor; kills CA's white-on-white inputs (matrix #8) */
+
+  /* ------------------------------------------------------------------
+     4. PRIMARY + STATE VARIANTS
+     One purple. Derived states move OKLCH lightness only, hue/chroma pinned,
+     so every surface's hover/active is the same purple family (matrix #1).
+     ------------------------------------------------------------------ */
+  --rh-primary:            var(--rh-purple);
+  --rh-primary-hover:      #532ae4;     /* oklch(0.478 0.253 281.2) — L −0.06 */
+  --rh-primary-active:     #4a11d5;     /* oklch(0.438 0.253 281.2) — L −0.10 */
+  --rh-primary-subtle:     #edefff;     /* oklch(0.955 0.025 281.2) — tint fills, selected rows, badges */
+  --rh-primary-border:     #bdc1fe;     /* oklch(0.830 0.085 281.2) — decorative edge on subtle fills (not a 3:1 UI edge) */
+  --rh-primary-foreground: var(--rh-white);  /* text/icon on solid primary — 5.71:1 */
+
+  /* ------------------------------------------------------------------
+     5. STATUS COLORS + VARIANTS
+     Bases are tuned so base-as-text passes 4.5:1 ON ITS OWN SUBTLE FILL
+     (the hardest pair), which implies it passes on paper/white too.
+     These are the ONLY colors for ok/attention/error meaning — the heat
+     ramp is never a status system (see §6).
+     ------------------------------------------------------------------ */
+  --rh-success:            #2c7e49;     /* oklch(0.531 0.115 152) — 4.89:1 on paper, 4.56:1 on subtle */
+  --rh-success-hover:      #19703c;
+  --rh-success-subtle:     #e9f8ec;
+  --rh-success-border:     #acdcb8;
+  --rh-success-foreground: var(--rh-white);   /* on solid success — 5.01:1 */
+
+  --rh-warning:            #9e6015;     /* oklch(0.547 0.115 65) — 4.95:1 on paper, 4.57:1 on subtle */
+  --rh-warning-hover:      #8e5200;
+  --rh-warning-subtle:     #fef1e4;
+  --rh-warning-border:     #eec59e;
+  --rh-warning-foreground: var(--rh-white);   /* on solid warning — 5.08:1 */
+
+  --rh-destructive:            #c63c36; /* oklch(0.558 0.175 27) — 4.99:1 on paper, 4.56:1 on subtle. Deliberately NOT heat-end #ed363e (3.94:1 — fails text AA) */
+  --rh-destructive-hover:      #b42a27;
+  --rh-destructive-subtle:     #ffeeec;
+  --rh-destructive-border:     #f8bdb5;
+  --rh-destructive-foreground: var(--rh-white); /* on solid destructive — 5.12:1 */
+
+  /* ------------------------------------------------------------------
+     6. HEAT RAMP — DATA ENCODING ONLY. Never decoration.
+     RULES (locked, program spec):
+       • Position along the ramp maps to a heat VALUE (score, progress,
+         hot-moment intensity, pipeline heat). No value → no ramp.
+       • Discrete values use the 5 sampled SOLIDS; the continuous gradient
+         appears only on true continuums (dial arc, heat bar fill).
+       • NEVER: gradient text, gradient hero/section backgrounds, gradient
+         buttons, gradient borders. (Kills CA's .text-gradient headings and
+         LA's gradient CTA — matrix #5.)
+       • Heat colors NEVER carry small text and never sit under it:
+         white on heat-5 = 4.04:1, ink on heat-5 = 4.33:1 — both fail AA.
+         Text-bearing score badges use status/neutral tokens; heat appears
+         as the fill/marker beside the label, or as LARGE display numerals
+         (≥24px / ≥19px bold), where the 3:1 large-text floor holds for all
+         five solids on paper.
+       • Exactly these three stops. CA's #6a43f9→#ef3d34 and LA's
+         purple→pink two-stops die here.
+     Canonical ramp components (reuse, don't reinvent): score dial,
+     hot-moment timeline marker, pipeline heat bar.
+     ------------------------------------------------------------------ */
+  --rh-heat-ramp-start: #8f3eba;    /* brand accent violet  — oklch(0.528 0.193 311.6) */
+  --rh-heat-ramp-mid:   #be3a7c;    /* brand accent magenta — oklch(0.560 0.179 353.7) */
+  --rh-heat-ramp-end:   #ed363e;    /* brand accent red     — oklch(0.621 0.218 24.4)  */
+  /* 5 sampled solids for discrete encodings (cold → hot); 2 and 4 are OKLCH
+     midpoints of the adjacent stops. All ≥3.9:1 vs paper (3:1 UI floor). */
+  --rh-heat-1: #8f3eba;
+  --rh-heat-2: #aa3a9d;             /* oklch midpoint of start/mid */
+  --rh-heat-3: #be3a7c;
+  --rh-heat-4: #d73664;             /* oklch midpoint of mid/end */
+  --rh-heat-5: #ed363e;
+  /* The one canonical gradient. Continuums only; components may rotate the
+     angle but never re-derive the stops. */
+  --rh-heat-gradient: linear-gradient(90deg, var(--rh-heat-ramp-start), var(--rh-heat-ramp-mid), var(--rh-heat-ramp-end));
+
+  /* ------------------------------------------------------------------
+     7. TYPOGRAPHY — CANONICAL families (Task 9 gate, Ken pick 2026-07-09:
+     Direction B "Signature"; UI face swapped to Geist 2026-07-09 per G1 —
+     General Sans/Switzer FF EULA bars self-hosting/subsetting). Body/UI =
+     Geist (OFL); second register =
+     Geist Mono for numerals/scores/IDs. Inter/Roboto/Open Sans stay
+     banned. Scale below unchanged (was final regardless of family).
+     ------------------------------------------------------------------ */
+  --rh-font-ui: "Geist", ui-sans-serif, system-ui, sans-serif;  /* canonical (OFL) — see fonts.css */
+  --rh-font-display: var(--rh-font-ui);      /* display = UI family, heavier weights (B has no separate display face) */
+  --rh-font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;  /* second register: scores, IDs, stat numerals */
+
+  /* Sizes + paired line-heights. One scale for six surfaces — kills the
+     portal-30px vs CA-60px-hero vs Vault ad-hoc h1 drift (matrix rows:
+     type scale). Page h1 = 3xl; display/stat sizes are for numerals and
+     marketing-free app chrome, not bigger headings. */
+  --rh-text-xs: 0.75rem;    --rh-leading-xs: 1rem;      /* 12/16 — eyebrows, badges, table meta */
+  --rh-text-sm: 0.875rem;   --rh-leading-sm: 1.25rem;   /* 14/20 — body in dense UI, table cells */
+  --rh-text-base: 1rem;     --rh-leading-base: 1.5rem;  /* 16/24 — default body */
+  --rh-text-lg: 1.125rem;   --rh-leading-lg: 1.75rem;   /* 18/28 — lead paragraph, card titles */
+  --rh-text-xl: 1.25rem;    --rh-leading-xl: 1.75rem;   /* 20/28 — section headings, h3 */
+  --rh-text-2xl: 1.5rem;    --rh-leading-2xl: 2rem;     /* 24/32 — h2 / lesson titles */
+  --rh-text-3xl: 1.875rem;  --rh-leading-3xl: 2.25rem;  /* 30/36 — page h1 */
+  --rh-text-4xl: 2.25rem;   --rh-leading-4xl: 2.5rem;   /* 36/40 — display (rare in-app) */
+  --rh-text-stat: 3.75rem;  --rh-leading-stat: 1;       /* 60/1 — the big stat/score numeral ONLY (tabular-nums mandatory) */
+
+  --rh-weight-regular: 400;
+  --rh-weight-medium: 500;
+  --rh-weight-semibold: 600;   /* headings + buttons cap here by default */
+  --rh-weight-bold: 700;       /* stat numerals, strongest emphasis. Nothing ships 800 — kills CA's extrabold drift */
+
+  --rh-tracking-tight: -0.02em;   /* headings ≥2xl */
+  --rh-tracking-normal: 0;
+  --rh-tracking-wide: 0.06em;     /* uppercase eyebrows/labels only */
+
+  /* Numeric craft: tabular figures are mandatory on tables, stat tiles and
+     scores — apply via `font-variant-numeric: tabular-nums` (token below so
+     the rule is grep-able). */
+  --rh-numeric: tabular-nums;
+
+  /* ------------------------------------------------------------------
+     8. SPACING — 4px base scale
+     Identical to Tailwind's default rem scale ON PURPOSE: TW consumers keep
+     p-4/gap-6 etc., plain-CSS consumers use these vars, both agree.
+     ------------------------------------------------------------------ */
+  --rh-space-0: 0;
+  --rh-space-px: 1px;
+  --rh-space-1: 0.25rem;    /*  4px */
+  --rh-space-2: 0.5rem;     /*  8px */
+  --rh-space-3: 0.75rem;    /* 12px */
+  --rh-space-4: 1rem;       /* 16px */
+  --rh-space-5: 1.25rem;    /* 20px */
+  --rh-space-6: 1.5rem;     /* 24px — default card padding */
+  --rh-space-8: 2rem;       /* 32px */
+  --rh-space-10: 2.5rem;    /* 40px */
+  --rh-space-12: 3rem;      /* 48px */
+  --rh-space-16: 4rem;      /* 64px */
+  --rh-space-20: 5rem;      /* 80px */
+  --rh-space-24: 6rem;      /* 96px — section rhythm */
+
+  /* Density rhythm for data-dense screens (CA scorecards, LA pipelines
+     share one vertical rhythm): */
+  --rh-row-comfortable: 3rem;      /* 48px row height */
+  --rh-row-compact: 2.25rem;       /* 36px row height */
+
+  /* ------------------------------------------------------------------
+     9. RADIUS — one scale, ends the 6px/12px/16px per-surface drift
+     (matrix #9: LA 6-vs-12 buttons, QuotaFit 6-vs-16 cards, Vault xl/2xl mix)
+     ------------------------------------------------------------------ */
+  --rh-radius-xs: 4px;        /* checkboxes, tiny chips */
+  --rh-radius-sm: 8px;        /* badges, inline tags, small controls */
+  --rh-radius-md: 12px;       /* THE control radius: buttons + inputs, always */
+  --rh-radius-lg: 16px;       /* THE container radius: cards, panels, modals */
+  --rh-radius-full: 9999px;   /* pills, avatars */
+
+  /* R corner-notch geometry (SYSTEM.md §4.1 / Appendix B — values FINAL).
+     The wordmark R's 45° cut as a clipped corner. Clip sizes, not radii.
+     RULES (locked): entitled/featured cards + panels, product-icon tiles
+     and the account avatar ONLY; ≤3 motif sites per screen; NEVER on
+     available/locked cards, buttons, inputs, badges, tables, or modals.
+     Componentize the ::before/::after construction once — don't hand-copy. */
+  --rh-notch-card: 22px;      /* top-right notch on entitled/featured cards + panels */
+  --rh-notch-icon: 10px;      /* clip-path notch on product-icon tiles + account avatar */
+
+  /* ------------------------------------------------------------------
+     10. ELEVATION — exactly 2 shadow levels; borders do containment
+     Neutral ink-based alpha only. NO colored/glow shadows — the portal's
+     `rgba(88,67,249,.6) 0 18px 60px -35px` CTA glow and the hand-copied
+     `0_18px_60px_-35px` card hover die here (matrix #3).
+     ------------------------------------------------------------------ */
+  --rh-shadow-1: 0 1px 2px 0 rgb(25 25 30 / 0.05), 0 1px 3px 0 rgb(25 25 30 / 0.06);            /* resting lift: cards that need it, dropdown triggers */
+  --rh-shadow-2: 0 4px 8px -2px rgb(25 25 30 / 0.06), 0 12px 24px -8px rgb(25 25 30 / 0.12);    /* floating: popovers, modals, toasts */
+
+  /* ------------------------------------------------------------------
+     11. MOTION — improvised motion is where slop is most legible
+     Rules (locked): animate transform/opacity only; ONE hover signal per
+     element; focus rings are INSTANT (never transitioned); silent success,
+     toasts for failures only; skeletons over spinners for known layouts.
+     No `ease`, no bounce — the three named curves below are the only ones.
+     ------------------------------------------------------------------ */
+  --rh-duration-fast: 120ms;    /* hovers, focus fills, small state flips */
+  --rh-duration-base: 200ms;    /* dropdowns, tooltips, in-place reveals */
+  --rh-duration-slow: 300ms;    /* modals, drawers, page-level transitions */
+
+  --rh-ease-out: cubic-bezier(0.16, 1, 0.3, 1);       /* enter/expand — fast start, soft landing */
+  --rh-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* move/morph between on-screen states */
+  --rh-ease-in: cubic-bezier(0.55, 0, 1, 0.45);       /* exit/collapse — accelerate away */
+
+  --rh-skeleton-delay: 150ms;   /* skeletons appear only after this — no flash on fast loads */
+
+  /* Ambient-loop constants (SYSTEM.md §5 / Appendix B — values FINAL).
+     The ONLY sanctioned loop timings. Deliberately NOT collapsed by the
+     reduced-motion block below (a 1ms infinite loop strobes — worse, not
+     better); reduced-motion for loops is component-level (pause the loop). */
+  --rh-duration-spinner: 800ms;         /* button-spinner rotation — linear timing, always */
+  --rh-duration-skeleton-pulse: 1200ms; /* skeleton pulse — --rh-ease-in-out, opacity 1 → 0.6, alternate infinite */
+
+  /* ------------------------------------------------------------------
+     12. Z-INDEX — one ladder, no arbitrary z-50 arms race
+     ------------------------------------------------------------------ */
+  --rh-z-base: 0;
+  --rh-z-dropdown: 1000;
+  --rh-z-sticky: 1100;      /* sticky headers/table headers */
+  --rh-z-overlay: 1200;     /* scrims behind modals/drawers */
+  --rh-z-modal: 1300;
+  --rh-z-popover: 1400;     /* popovers/tooltips may sit over modals */
+  --rh-z-toast: 1500;
+
+  /* ------------------------------------------------------------------
+     13. FOCUS — visible, instant, everywhere keyboard reaches
+     Primary vs paper = 5.56:1 (≥3:1 UI floor). Rendered as outline/ring,
+     never as a transitioned box-shadow.
+     ------------------------------------------------------------------ */
+  --rh-focus-ring-color: var(--rh-primary);
+  --rh-focus-ring-width: 2px;
+  --rh-focus-ring-offset: 2px;
+}
+
+/* Reduced motion is honored at the token layer: durations collapse so every
+   consumer inherits compliance without per-component work. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --rh-duration-fast: 1ms;
+    --rh-duration-base: 1ms;
+    --rh-duration-slow: 1ms;
+  }
+}

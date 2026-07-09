@@ -1,0 +1,92 @@
+/* ==========================================================================
+   RevHeat design tokens — fonts.css (@revheat/design-tokens `./fonts.css`)
+
+   Canonical families (Task 9 direction B "Signature" + ROLLOUT G1, 2026-07-09):
+     • Body/UI:  Geist 400/500/600/700 (Vercel, OFL — swapped from General
+       Sans per ROLLOUT G1: the ITF FF EULA bars self-hosting/subsetting)
+     • Second register (numeric): Geist Mono 400/500/600 (Vercel, OFL) —
+       scores, IDs, stat numerals; always with font-variant-numeric
+       tokens (--rh-numeric).
+     • BANNED remain: Inter, Roboto, Open Sans (AI-default tells).
+     • <=3 families total: Geist + Geist Mono (+ wordmark SVG, which is
+       vector, not a font).
+
+   Distribution rules (locked, program spec): self-hosted woff2 shipped
+   INSIDE this package under ./fonts/, font-display: swap. No CDN fonts.
+   No per-repo improvisation. License: SIL OFL 1.1 — see ./fonts/OFL.txt.
+
+   SUBSETTING STATUS: the woff2 files are the vendor's full web cuts as
+   shipped by npm `geist@1.7.2` — NOT re-subset (no clean non-python
+   subsetting CLI available at package build; deferred — see README).
+   The unicode-range declarations below scope the UI faces to latin USAGE;
+   they do not imply the files themselves are latin-only.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Geist";
+  src: url("./fonts/Geist-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD; /* latin usage range (file is the full vendor cut — subset deferred) */
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("./fonts/Geist-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("./fonts/Geist-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("./fonts/Geist-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+/* Second register — numeric/mono (scores, IDs, stat numerals) */
+@font-face {
+  font-family: "Geist Mono";
+  src: url("./fonts/GeistMono-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("./fonts/GeistMono-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("./fonts/GeistMono-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

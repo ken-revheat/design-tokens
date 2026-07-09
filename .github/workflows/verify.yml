@@ -1,0 +1,23 @@
+# Package verify gate (SYSTEM.md §11.3): the contrast gate runs on every
+# push/PR — token edits that break an AA pair or introduce a flat grey fail
+# the build — and the TW3 preset must stay require()-able.
+# No `build`/`prepare` script exists by design (git-dep recipe: committed
+# files ARE the dist); this workflow is the package's only gate.
+name: verify
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Contrast gate (AA pairs + no flat greys)
+        run: node contrast-check.mjs
+      - name: TW3 preset loads
+        run: node -e "require('./tailwind3-preset.js')"

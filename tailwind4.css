@@ -1,0 +1,139 @@
+/* ==========================================================================
+   RevHeat design tokens — Tailwind 4 theme
+   (@revheat/design-tokens export `./tailwind4.css`)
+
+   Consumer: QuotaFit Hire (Next.js + Tailwind 4, CSS-first `@theme`).
+
+   Usage in a consuming repo's global CSS:
+       @import "tailwindcss";
+       @import "@revheat/design-tokens/tailwind4.css";  /* imports vars.css itself */
+       @import "@revheat/design-tokens/fonts.css";
+
+   Notes on the mechanics:
+   • `@theme inline` (not plain `@theme`) because values reference the
+     runtime custom properties defined in vars.css — `inline` makes the
+     generated utilities carry the var() reference through.
+   • TW4 opacity modifiers (`bg-primary/50`) work natively on any real color
+     value — no wrapper needed. This is half of the value-format decision
+     (SYSTEM.md §11.2): full hex values are TW4-native.
+   • `--color-*: initial` is NOT used here: this file extends rather than
+     replaces the default theme. A later major may reset namespaces once
+     QuotaFit's zinc usage is fully migrated.
+   • Every value references a token that exists in vars.css — no literals.
+   ========================================================================== */
+
+@import "./vars.css";
+
+@theme inline {
+  /* ---- color namespace → utilities like bg-paper, text-ink, border-border ---- */
+  --color-paper: var(--rh-bg);
+  --color-surface: var(--rh-surface);
+  --color-surface-subtle: var(--rh-surface-subtle);
+  --color-ink: var(--rh-ink);
+  --color-text-secondary: var(--rh-text-secondary);
+  --color-text-muted: var(--rh-text-muted);
+  --color-text-disabled: var(--rh-text-disabled);
+  --color-border: var(--rh-border);
+  --color-border-strong: var(--rh-border-strong);
+  --color-border-input: var(--rh-border-input);
+
+  --color-neutral-50: var(--rh-n-50);
+  --color-neutral-100: var(--rh-n-100);
+  --color-neutral-200: var(--rh-n-200);
+  --color-neutral-300: var(--rh-n-300);
+  --color-neutral-400: var(--rh-n-400);
+  --color-neutral-500: var(--rh-n-500);
+  --color-neutral-600: var(--rh-n-600);
+  --color-neutral-700: var(--rh-n-700);
+  --color-neutral-800: var(--rh-n-800);
+  --color-neutral-900: var(--rh-n-900);
+
+  --color-primary: var(--rh-primary);
+  --color-primary-hover: var(--rh-primary-hover);
+  --color-primary-active: var(--rh-primary-active);
+  --color-primary-subtle: var(--rh-primary-subtle);
+  --color-primary-border: var(--rh-primary-border);
+  --color-primary-foreground: var(--rh-primary-foreground);
+
+  --color-success: var(--rh-success);
+  --color-success-hover: var(--rh-success-hover);
+  --color-success-subtle: var(--rh-success-subtle);
+  --color-success-border: var(--rh-success-border);
+  --color-success-foreground: var(--rh-success-foreground);
+
+  --color-warning: var(--rh-warning);
+  --color-warning-hover: var(--rh-warning-hover);
+  --color-warning-subtle: var(--rh-warning-subtle);
+  --color-warning-border: var(--rh-warning-border);
+  --color-warning-foreground: var(--rh-warning-foreground);
+
+  --color-destructive: var(--rh-destructive);
+  --color-destructive-hover: var(--rh-destructive-hover);
+  --color-destructive-subtle: var(--rh-destructive-subtle);
+  --color-destructive-border: var(--rh-destructive-border);
+  --color-destructive-foreground: var(--rh-destructive-foreground);
+
+  /* heat ramp — data encoding only (policy in vars.css §6); solids as
+     utilities (bg-heat-1 … bg-heat-5); gradient via custom utility below */
+  --color-heat-1: var(--rh-heat-1);
+  --color-heat-2: var(--rh-heat-2);
+  --color-heat-3: var(--rh-heat-3);
+  --color-heat-4: var(--rh-heat-4);
+  --color-heat-5: var(--rh-heat-5);
+
+  /* ---- typography ---- */
+  --font-sans: var(--rh-font-ui);          /* Geist (canonical, OFL — G1 font-EULA gate, 2026-07-09) */
+  --font-display: var(--rh-font-display);
+  --font-mono: var(--rh-font-mono);
+
+  --text-xs: var(--rh-text-xs);
+  --text-xs--line-height: var(--rh-leading-xs);
+  --text-sm: var(--rh-text-sm);
+  --text-sm--line-height: var(--rh-leading-sm);
+  --text-base: var(--rh-text-base);
+  --text-base--line-height: var(--rh-leading-base);
+  --text-lg: var(--rh-text-lg);
+  --text-lg--line-height: var(--rh-leading-lg);
+  --text-xl: var(--rh-text-xl);
+  --text-xl--line-height: var(--rh-leading-xl);
+  --text-2xl: var(--rh-text-2xl);
+  --text-2xl--line-height: var(--rh-leading-2xl);
+  --text-3xl: var(--rh-text-3xl);
+  --text-3xl--line-height: var(--rh-leading-3xl);
+  --text-4xl: var(--rh-text-4xl);
+  --text-4xl--line-height: var(--rh-leading-4xl);
+  --text-stat: var(--rh-text-stat);        /* big score numeral; pair with tabular-nums */
+  --text-stat--line-height: var(--rh-leading-stat);
+
+  --tracking-tight: var(--rh-tracking-tight);
+  --tracking-wide: var(--rh-tracking-wide);
+
+  /* ---- radius: buttons+inputs = md, cards = lg (kills 6/12/16 drift) ---- */
+  --radius-xs: var(--rh-radius-xs);
+  --radius-sm: var(--rh-radius-sm);
+  --radius-md: var(--rh-radius-md);
+  --radius-lg: var(--rh-radius-lg);
+
+  /* ---- elevation: exactly two levels, neutral only ---- */
+  --shadow-1: var(--rh-shadow-1);
+  --shadow-2: var(--rh-shadow-2);
+
+  /* ---- motion ---- */
+  --ease-out: var(--rh-ease-out);
+  --ease-in-out: var(--rh-ease-in-out);
+  --ease-in: var(--rh-ease-in);
+
+  /* Font weights: vars.css's scale (400/500/600/700) equals TW4's default
+     font-normal/medium/semibold/bold — the identity is the contract, no
+     override needed. Nothing ships 800.
+     Spacing: TW4's default --spacing (0.25rem base) already equals the
+     vars.css scale — the identity is the contract, no override needed. */
+}
+
+/* Durations and z-index have no @theme namespace in TW4 — consume the vars
+   directly (transition-duration: var(--rh-duration-fast)) or via arbitrary
+   values (duration-[var(--rh-duration-fast)], z-[var(--rh-z-modal)]).
+   The one sanctioned gradient ships as a utility so nobody re-derives stops: */
+@utility bg-heat-gradient {
+  background-image: var(--rh-heat-gradient); /* continuums only — see vars.css §6 */
+}
