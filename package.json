@@ -22,11 +22,12 @@
     "fonts",
     "assets",
     "contrast-check.mjs",
+    "css-parse-check.mjs",
     "LICENSE",
     "README.md"
   ],
   "scripts": {
-    "verify": "node contrast-check.mjs && node -e \"require('./tailwind3-preset.js')\"",
+    "verify": "node contrast-check.mjs && node css-parse-check.mjs && node -e \"require('./tailwind3-preset.js')\"",
     "test": "npm run verify"
   },
   "repository": {
