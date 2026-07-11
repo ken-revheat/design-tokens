@@ -6,8 +6,10 @@
 
    Usage in a consuming repo's global CSS:
        @import "tailwindcss";
-       @import "@revheat/design-tokens/tailwind4.css";  /* imports vars.css itself */
+       @import "@revheat/design-tokens/tailwind4.css";
        @import "@revheat/design-tokens/fonts.css";
+
+   This file imports vars.css itself — consumers do not import it separately.
 
    Notes on the mechanics:
    • `@theme inline` (not plain `@theme`) because values reference the
