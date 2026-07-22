@@ -1,10 +1,13 @@
 {
   "name": "@revheat/design-tokens",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "RevHeat design tokens — the runtime distribution of the RevHeat design system (SYSTEM.md contract): CSS custom properties, Tailwind 3 preset, Tailwind 4 theme, self-hosted Geist/Geist Mono fonts, and brand assets.",
   "license": "MIT",
   "private": false,
   "main": "tailwind3-preset.js",
+  "bin": {
+    "revheat-favicon": "bin/revheat-favicon.mjs"
+  },
   "exports": {
     "./tailwind3-preset": "./tailwind3-preset.js",
     "./tailwind4.css": "./tailwind4.css",
@@ -23,11 +26,14 @@
     "assets",
     "contrast-check.mjs",
     "css-parse-check.mjs",
+    "bin",
+    "lib",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "BRANDING.md"
   ],
   "scripts": {
-    "verify": "node contrast-check.mjs && node css-parse-check.mjs && node -e \"require('./tailwind3-preset.js')\"",
+    "verify": "node contrast-check.mjs && node css-parse-check.mjs && node -e \"require('./tailwind3-preset.js')\" && node --test",
     "test": "npm run verify"
   },
   "repository": {
