@@ -2,8 +2,12 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, copyFileSync, rmSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { canonicalDir, syncTo, verifyDir } from '../bin/revheat-favicon.mjs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
+import { canonicalDir, syncTo, verifyDir } from '../lib/favicon.mjs';
+
+const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 function tmp() { return mkdtempSync(join(tmpdir(), 'favtest-')); }
 
@@ -39,4 +43,19 @@ test('verify fails when no primary favicon is present', () => {
   const r = verifyDir(d);
   assert.equal(r.ok, false);
   rmSync(d, { recursive: true, force: true });
+});
+
+test('bin entry actually executes as a subprocess (no import.meta.url guard)', () => {
+  const d = tmp();
+  execFileSync(process.execPath, ['bin/revheat-favicon.mjs', 'sync', d], { cwd: REPO_ROOT });
+  execFileSync(process.execPath, ['bin/revheat-favicon.mjs', 'verify', d], { cwd: REPO_ROOT });
+
+  const emptyDir = tmp();
+  assert.throws(
+    () => execFileSync(process.execPath, ['bin/revheat-favicon.mjs', 'verify', emptyDir], { cwd: REPO_ROOT }),
+    (err) => err.status === 1
+  );
+
+  rmSync(d, { recursive: true, force: true });
+  rmSync(emptyDir, { recursive: true, force: true });
 });
