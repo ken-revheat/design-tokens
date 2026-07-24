@@ -1,11 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync, readFileSync, copyFileSync, rmSync, readdirSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, readFileSync, copyFileSync, rmSync, readdirSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
-import { canonicalDir, syncTo, verifyDir } from '../lib/favicon.mjs';
+import { canonicalDir, syncTo, verifyDir, verifyShell } from '../lib/favicon.mjs';
 
 const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -58,4 +58,28 @@ test('bin entry actually executes as a subprocess (no import.meta.url guard)', (
 
   rmSync(d, { recursive: true, force: true });
   rmSync(emptyDir, { recursive: true, force: true });
+});
+
+test("verify-shell fails when nothing mounts the shell", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vs-"));
+  writeFileSync(join(dir, "page.tsx"), `import { PRODUCT_CATALOG } from "@revheat/ui/catalog";`);
+  const r = verifyShell(dir);
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.length > 0);
+});
+
+test("verify-shell passes when a file mounts AppShell from @revheat/ui/react", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vs-"));
+  mkdirSync(join(dir, "app"), { recursive: true });
+  writeFileSync(join(dir, "app", "layout.tsx"), `import { AppShell } from "@revheat/ui/react";\nexport default () => <AppShell/>;`);
+  const r = verifyShell(dir);
+  assert.equal(r.ok, true);
+});
+
+test("verify-shell ignores node_modules/.next/dist", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vs-"));
+  mkdirSync(join(dir, "node_modules", "x"), { recursive: true });
+  writeFileSync(join(dir, "node_modules", "x", "y.tsx"), `import { AppShell } from "@revheat/ui/react";`);
+  const r = verifyShell(dir);
+  assert.equal(r.ok, false); // the mount inside node_modules must NOT count
 });
