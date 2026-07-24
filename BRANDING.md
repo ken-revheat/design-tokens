@@ -23,6 +23,22 @@ type + shell from the package rather than re-authored copies. The agent reports 
 plain-English gap summary to Ken. No new app is built until this passes — but it is
 agent-run, not a human bottleneck.
 
+(4) mounts the shared shell (verified by `revheat-favicon verify-shell`), reads
+product data from `@revheat/ui/catalog`, and wires identity via the
+session / `/api/me/products` fetch.
+
+## RevHeat portal app standard
+
+Every app that renders inside the RevHeat portal MUST:
+
+1. **Mount the shared shell** — render page content inside `<AppShell>` from
+   `@revheat/ui/react` (or the Vue equivalent when it ships). Enforced by
+   `revheat-favicon verify-shell`.
+2. **Read the shared catalog** — take the product list from `@revheat/ui/catalog`,
+   never a re-authored per-app copy.
+3. **Wire identity** — feed the shell the signed-in user's email, internal/staff
+   flag, and owned-product set (via `/api/me/products`), not a hard-coded menu.
+
 ## Favicon reference by build system
 - **Nuxt:** synced files land in `public/`; reference `/favicon.svg` (+ apple-touch
   `/favicon-180.png`) in `nuxt.config` `app.head.link`.
