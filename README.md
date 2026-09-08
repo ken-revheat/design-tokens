@@ -104,6 +104,11 @@ The same two commands run in CI (`.github/workflows/verify.yml`) on every
 push/PR. Any token edit that breaks a contrast pair or introduces a flat
 (zero-chroma) grey neutral fails the build.
 
+Consumer apps also run `revheat-favicon verify-shell <srcDir>`, which fails
+the build if no file mounts `<AppShell>` from `@revheat/ui/react` or `/vue`,
+or if the app still ships its own product/sidebar rail file — the shared
+shell owns the rail.
+
 ### Install-verify (run in a consumer before pinning a SHA)
 
 ```sh

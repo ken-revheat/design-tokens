@@ -34,8 +34,9 @@ state.
 Every app that renders inside the RevHeat portal MUST:
 
 1. **Mount the shared shell** — render page content inside `<AppShell>` from
-   `@revheat/ui/react` (or the Vue equivalent when it ships). Enforced by
-   `revheat-favicon verify-shell`.
+   `@revheat/ui/react` (or the Vue equivalent when it ships), and do not keep a
+   per-app product/sidebar rail alongside it — the shared shell owns the rail.
+   Enforced by `revheat-favicon verify-shell`.
 2. **Read the shared catalog** — take the product list from `@revheat/ui/catalog`,
    never a re-authored per-app copy.
 3. **Wire identity** — feed the shell the signed-in user's email, internal/staff
