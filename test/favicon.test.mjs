@@ -131,6 +131,90 @@ test("verify-shell survives a dangling symlink and still finds the real mount", 
   assert.equal(r.ok, true, r.errors.join("; "));
 });
 
+function withMount(dir) {
+  mkdirSync(join(dir, "app"), { recursive: true });
+  writeFileSync(join(dir, "app", "layout.tsx"),
+    `import { AppShell } from "@revheat/ui/react";\nexport default () => <AppShell/>;`);
+}
+
+test("verify-shell fails on components/RhProductRail.vue", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vs-"));
+  withMount(dir);
+  mkdirSync(join(dir, "components"), { recursive: true });
+  writeFileSync(join(dir, "components", "RhProductRail.vue"), `<template></template>`);
+  const r = verifyShell(dir);
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.some(e => e.includes("own product rail found: components/RhProductRail.vue")));
+});
+
+test("verify-shell fails on components/RhSidebar.vue", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vs-"));
+  withMount(dir);
+  mkdirSync(join(dir, "components"), { recursive: true });
+  writeFileSync(join(dir, "components", "RhSidebar.vue"), `<template></template>`);
+  const r = verifyShell(dir);
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.some(e => e.includes("own product rail found: components/RhSidebar.vue")));
+});
+
+test("verify-shell fails on components/RhSidebarRail.vue", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vs-"));
+  withMount(dir);
+  mkdirSync(join(dir, "components"), { recursive: true });
+  writeFileSync(join(dir, "components", "RhSidebarRail.vue"), `<template></template>`);
+  const r = verifyShell(dir);
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.some(e => e.includes("own product rail found: components/RhSidebarRail.vue")));
+});
+
+test("verify-shell fails on src/components/ProductRail.tsx", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vs-"));
+  withMount(dir);
+  mkdirSync(join(dir, "src", "components"), { recursive: true });
+  writeFileSync(join(dir, "src", "components", "ProductRail.tsx"), `export default function ProductRail() { return null; }`);
+  const r = verifyShell(dir);
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.some(e => e.includes("own product rail found: src/components/ProductRail.tsx")));
+});
+
+test("verify-shell fails on src/app-shell/Sidebar.tsx", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vs-"));
+  withMount(dir);
+  mkdirSync(join(dir, "src", "app-shell"), { recursive: true });
+  writeFileSync(join(dir, "src", "app-shell", "Sidebar.tsx"), `export default function Sidebar() { return null; }`);
+  const r = verifyShell(dir);
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.some(e => e.includes("own product rail found: src/app-shell/Sidebar.tsx")));
+});
+
+test("verify-shell fails on app/utils/railProjection.ts", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vs-"));
+  withMount(dir);
+  mkdirSync(join(dir, "app", "utils"), { recursive: true });
+  writeFileSync(join(dir, "app", "utils", "railProjection.ts"), `export function railProjection() {}`);
+  const r = verifyShell(dir);
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.some(e => e.includes("own product rail found: app/utils/railProjection.ts")));
+});
+
+test("verify-shell does NOT flag components/ui/PageTrail.vue as a rail", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vs-"));
+  withMount(dir);
+  mkdirSync(join(dir, "components", "ui"), { recursive: true });
+  writeFileSync(join(dir, "components", "ui", "PageTrail.vue"), `<template></template>`);
+  const r = verifyShell(dir);
+  assert.equal(r.ok, true, r.errors.join("; "));
+});
+
+test("verify-shell does NOT flag a rail-named file sitting inside node_modules", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vs-"));
+  withMount(dir);
+  mkdirSync(join(dir, "node_modules", "@revheat", "ui"), { recursive: true });
+  writeFileSync(join(dir, "node_modules", "@revheat", "ui", "RhProductRail.vue"), `<template></template>`);
+  const r = verifyShell(dir);
+  assert.equal(r.ok, true, r.errors.join("; "));
+});
+
 test("verify-shell exit codes as a subprocess: 1 on no-shell, 2 on bad usage", () => {
   const noShell = mkdtempSync(join(tmpdir(), "vs-"));
   writeFileSync(join(noShell, "page.tsx"), `import { Button } from "@revheat/ui/react";`);
@@ -146,4 +230,13 @@ test("verify-shell exit codes as a subprocess: 1 on no-shell, 2 on bad usage", (
   const withShell = mkdtempSync(join(tmpdir(), "vs-"));
   writeFileSync(join(withShell, "layout.tsx"), `import { AppShell } from "@revheat/ui/react";\nexport default () => <AppShell/>;`);
   execFileSync(process.execPath, ['bin/revheat-favicon.mjs', 'verify-shell', withShell], { cwd: REPO_ROOT }); // exit 0
+
+  const withRail = mkdtempSync(join(tmpdir(), "vs-"));
+  writeFileSync(join(withRail, "layout.tsx"), `import { AppShell } from "@revheat/ui/react";\nexport default () => <AppShell/>;`);
+  mkdirSync(join(withRail, "components"));
+  writeFileSync(join(withRail, "components", "RhProductRail.vue"), `<template><nav/></template>`);
+  assert.throws(
+    () => execFileSync(process.execPath, ['bin/revheat-favicon.mjs', 'verify-shell', withRail], { cwd: REPO_ROOT, stdio: 'pipe' }),
+    (err) => err.status === 1 && String(err.stderr).includes('own product rail found: components/RhProductRail.vue')
+  );
 });
