@@ -1,0 +1,50 @@
+/* Ledger adoption (2026-10-26). Import after vars.css / tailwind4.css.
+   Opt in on html so portaled overlays inherit the same semantics.
+   Existing products keep the classic palette until explicitly adopted. */
+[data-rh-theme="ledger"] {
+  --rh-paper: #F3F3F5;
+  --rh-white: #FFFFFF;
+  --rh-n-50: #F3F3F5;
+  --rh-n-100: #E4E4E9;
+  --rh-n-200: #E4E4E9;
+  --rh-n-300: #C9C9D2;
+  --rh-n-400: #8D8D98;
+  --rh-n-500: #5B5B66;
+  --rh-n-600: #5B5B66;
+  --rh-n-700: #3F3F4A;
+  --rh-n-800: #16161C;
+  --rh-n-900: #0B0B0F;
+  --rh-bg: #F3F3F5;
+  --rh-surface: #FFFFFF;
+  --rh-surface-subtle: #F3F3F5;
+  --rh-ink: #0B0B0F;
+  --rh-text-secondary: #3F3F4A;
+  --rh-text-muted: #5B5B66;
+  --rh-text-placeholder: #5B5B66;
+  --rh-text-disabled: #8D8D98;
+  --rh-border: #E4E4E9;
+  --rh-border-strong: #C9C9D2;
+  --rh-border-input: #898994;
+  /* Ink actions and Heat highlights are separate: Heat is not body text. */
+  --rh-primary: #0B0B0F;
+  --rh-primary-hover: #16161C;
+  --rh-primary-active: #2A2A33;
+  --rh-primary-subtle: #F3F3F5;
+  --rh-primary-border: #C9C9D2;
+  --rh-primary-foreground: #FFFFFF;
+  --rh-focus-ring-color: #0B0B0F;
+  --rh-accent: #FF4A1C;
+  --rh-accent-hover: #FF6338;
+  --rh-accent-foreground: #0B0B0F;
+  --rh-accent-text: #C2370B;
+  --rh-dark: #0B0B0F;
+  --rh-dark-surface: #16161C;
+  --rh-dark-border: #2A2A33;
+  --rh-on-dark: #C9C9D2;
+  --rh-muted-on-dark: #9A9AA6;
+  --rh-font-ui: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --rh-font-display: "Jost", ui-sans-serif, system-ui, sans-serif;
+  --rh-weight-medium: 600;
+  --rh-radius-md: 12px;
+  --rh-radius-lg: 12px;
+}
