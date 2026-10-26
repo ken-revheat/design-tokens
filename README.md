@@ -143,3 +143,39 @@ open — do it with `hb-subset` (harfbuzz) when tooling lands, then update the
   Vercel in collaboration with basement.studio — see `fonts/OFL.txt`.
 - Brand assets (`assets/*`): RevHeat brand property; distribution inside
   RevHeat products only.
+
+## Ledger adoption (v1.4.0, opt in)
+
+The approved October 2026 client experience uses the shared Ledger theme.
+Existing exports keep their current values for products that have not adopted it.
+
+```css
+@import '@revheat/design-tokens/vars.css';
+@import '@revheat/design-tokens/fonts.css';
+@import '@revheat/design-tokens/ledger.css';
+@import '@revheat/design-tokens/ledger-fonts.css';
+```
+
+For Tailwind 4, import `tailwind4.css` instead of `vars.css`, then Ledger.
+Set `data-rh-theme="ledger"` on **html**, including the SSR document, so
+body-portaled overlays inherit the same tokens. The theme changes semantic
+colors/fonts only within that scope. Use `--rh-primary` (Ink/white) for normal
+actions, `--rh-accent` (Heat/Ink) for one focal action, and `--rh-accent-text`
+for Heat-colored text; white text on Heat is not permitted. Status colors and
+numeric Geist Mono remain available. Display headings use `--rh-font-display`
+(Jost 600), body uses `--rh-font-ui` (Schibsted Grotesk 400/600).
+The input border is #898994, slightly darker than the prototype's #8D8D98,
+to clear 3:1 on Mist. Token contrast checks cover both themes.
+
+New brand assets: `assets/revheat-logo-on-light.svg`, `revheat-logo-on-dark.svg`
+and `revheat-app-icon.svg`. Drawing geometry comes unchanged from the approved
+V5 assets; export provenance metadata is omitted from distributed copies.
+Use two-color wordmarks at **160 CSS px minimum**, with one-third-height clear
+space. The exact supplied TrueType files are self-hosted in `fonts/`, licensed
+under SIL OFL 1.1 (`OFL-Jost.txt`, `OFL-SchibstedGrotesk.txt`); no CDN or font
+conversion dependency. Existing Geist cuts and legacy favicon tooling remain
+unchanged; app-icon adoption does not silently change other products' favicons.
+
+Call Analyzer pairs this export with `@revheat/ui` 2.4.0 `appearance="ledger"`.
+Pin exact reviewed package commits in the consumer and lockfile. Roll back both
+pins and remove the theme attribute/imports together; no stored-data migration.

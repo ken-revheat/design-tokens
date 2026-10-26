@@ -5,6 +5,12 @@ is the single source of truth for brand tokens and assets — apps consume it, t
 do not re-author it.
 
 ## Non-negotiables
+For an explicitly approved Ledger adoption (October 2026 client experience),
+use `ledger.css` and `ledger-fonts.css` as documented in README.md. Ink/Heat,
+Jost/Schibsted and the new original-logo assets supersede the classic color/type
+bullets below within that adoption. Existing products keep their defaults;
+favicon tooling and all shell, identity and data-honesty rules still apply.
+
 - **Favicon:** every app serves the canonical RevHeat "R" favicon. Apps MUST NOT
   commit their own favicon. Add design-tokens as a dependency, then in the app build:
   `revheat-favicon sync <publicDir> && revheat-favicon verify <publicDir>` BEFORE the

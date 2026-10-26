@@ -22,7 +22,7 @@
 import { readFileSync } from "node:fs";
 
 /** The shipped stylesheets. Override by passing paths as arguments (used by tests). */
-const SHIPPED = ["tailwind4.css", "vars.css", "fonts.css"];
+const SHIPPED = ["tailwind4.css", "vars.css", "fonts.css", "ledger.css", "ledger-fonts.css"];
 const args = process.argv.slice(2);
 const FILES = args.length ? args : SHIPPED;
 

@@ -1,7 +1,7 @@
 {
   "name": "@revheat/design-tokens",
-  "version": "1.3.0",
-  "description": "RevHeat design tokens — the runtime distribution of the RevHeat design system (SYSTEM.md contract): CSS custom properties, Tailwind 3 preset, Tailwind 4 theme, self-hosted Geist/Geist Mono fonts, and brand assets.",
+  "version": "1.4.0",
+  "description": "RevHeat design tokens \u2014 the runtime distribution of the RevHeat design system (SYSTEM.md contract): CSS custom properties, Tailwind 3 preset, Tailwind 4 theme, self-hosted Geist/Geist Mono fonts, and brand assets.",
   "license": "MIT",
   "private": false,
   "main": "tailwind3-preset.js",
@@ -15,7 +15,10 @@
     "./fonts.css": "./fonts.css",
     "./fonts/*.woff2": "./fonts/*.woff2",
     "./assets/*": "./assets/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./ledger.css": "./ledger.css",
+    "./ledger-fonts.css": "./ledger-fonts.css",
+    "./fonts/*.ttf": "./fonts/*.ttf"
   },
   "files": [
     "tailwind3-preset.js",
@@ -30,10 +33,13 @@
     "lib",
     "LICENSE",
     "README.md",
-    "BRANDING.md"
+    "BRANDING.md",
+    "ledger.css",
+    "ledger-fonts.css",
+    "ledger-check.mjs"
   ],
   "scripts": {
-    "verify": "node contrast-check.mjs && node css-parse-check.mjs && node -e \"require('./tailwind3-preset.js')\" && node --test",
+    "verify": "node contrast-check.mjs && node css-parse-check.mjs && node -e \"require('./tailwind3-preset.js')\" && node --test && node ledger-check.mjs",
     "test": "npm run verify"
   },
   "repository": {
